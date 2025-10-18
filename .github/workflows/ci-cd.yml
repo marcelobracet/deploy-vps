@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Deploy via rsync
 
 on:
   push:
@@ -8,12 +8,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy via SSH
+      - name: Deploy via rsync
+        uses: burnett01/rsync-deployments@5.2
+        with:
+          switches: -avz --delete
+          path: ./
+          remote_path: /root/hello-world
+          remote_host: ${{ secrets.VPS_HOST }}
+          remote_user: ${{ secrets.VPS_USER }}
+          remote_key: ${{ secrets.VPS_KEY }}
+
+      - name: Restart PM2
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -22,6 +31,5 @@ jobs:
           port: 22
           script: |
             cd ~/hello-world
-            git pull origin main
             npm install --production
             pm2 restart hello-world || pm2 start app.js --name hello-world
