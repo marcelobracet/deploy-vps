@@ -1,0 +1,8 @@
+app:
+  build: .
+  container_name: hello_world_app
+  ports:
+    - "80:3000"
+  restart: always
+  volumes:
+    - ./hello-world:/app
