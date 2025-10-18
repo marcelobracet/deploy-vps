@@ -7,7 +7,9 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.get("/", (_, res) => {
-  res.send("🔥 Hello World from Marcelo's VPS!");
+  res.send(
+    "🔥 Hello World from Marcelo's VPS now is automated with CI/CD !!!!!!!"
+  );
 });
 
 app.listen(port, "0.0.0.0", () => {
